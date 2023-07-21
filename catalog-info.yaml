@@ -4,7 +4,7 @@ metadata:
   name: backstage
   description: An example of a Backstage application.
   annotations:
-    "humanitec.com/orgId": "htc-demo-REPLACE"
+    "humanitec.com/orgId": "htc-demo-17"
     "humanitec.com/appId": "backstage"
 spec:
   type: website

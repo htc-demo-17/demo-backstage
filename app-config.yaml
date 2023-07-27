@@ -43,6 +43,10 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
+    - type: url
+      target: https://github.com/htc-demo-17/template-test/blob/main/template.yaml
+      rules:
+        - allow: [Template]
     - type: file
       target: ../../catalog-info.yaml
     - type: file

@@ -28,3 +28,7 @@ catalog:
       target: https://github.com/${GITHUB_ORG_ID}/demo-backstage/blob/main/templates/podinfo-example/template.yaml
       rules:
         - allow: [Template]
+    - type: url
+      target: https://github.com/${GITHUB_ORG_ID}/demo-backstage/blob/main/templates/microservice-java-template/template.yaml
+      rules:
+        - allow: [Template]

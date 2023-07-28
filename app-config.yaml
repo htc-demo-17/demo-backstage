@@ -41,7 +41,7 @@ scaffolder:
 
 catalog:
   rules:
-    - allow: [Component, System, API, Resource, Location]
+    - allow: [Component, System, API, Resource, Location, Templates]
   locations:
     - type: url
       target: https://github.com/htc-demo-17/template-test/blob/main/template.yaml

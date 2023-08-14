@@ -1,0 +1,48 @@
+name: Create Preview environment
+ 
+on:
+  # pull_request_target is granted a RW Access token allowing for commenting on a PR
+  pull_request_target:
+    types: [ opened,  reopened]
+ 
+jobs:
+  create-preview-env:
+    runs-on: ubuntu-latest
+    env:
+      HUMANITEC_ORG: <ORG ID>
+      APP_ID: <APP ID>
+      BASE_ENV_ID: <BASE ENV ID>
+      HUMANITEC_TOKEN: ${{ secrets.HUMANITEC_TOKEN }}
+ 
+    steps:
+      # checkout the supporting script
+      - uses: actions/checkout@v2
+      - uses: actions/github-script@v4
+        with:
+          script: |
+            const humanitec = require('./.github/js/humanitec.js');
+            const {HUMANITEC_ORG, APP_ID, BASE_ENV_ID} = process.env;
+            const ENV_ID = `${context.repo.repo}-${context.issue.number}`;
+            const ENV_PATH = `/orgs/${HUMANITEC_ORG}/apps/${APP_ID}/envs/${ENV_ID}`;
+            const IMAGE_ID = context.repo.repo;
+            const BRANCH_NAME = context.payload.pull_request.head.ref;
+            const env = await humanitec.cloneEnvironment(APP_ID, BASE_ENV_ID, ENV_ID);
+            if (env.status > 400) {
+              if (env.status == 409) {
+                core.error(`Cannot create preview environment. Environment with ID "${ENV_ID}" already exists.`);
+              } else {
+                core.error(`Cannot create preview environment: ${JSON.stringify(env.body)}`);
+              }
+              return;
+            }
+            const rule = await humanitec.addAutomationRule(APP_ID, ENV_ID, [IMAGE_ID], BRANCH_NAME);
+            if (env.status > 400) {
+              core.error(`Cannot create automation rule in environment ${ENV_ID}: ${JSON.stringify(env.body)}`);
+              return;
+            }
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Created environment in Humanitec: https://app.humanitec.io${ENV_PATH}`
+            });

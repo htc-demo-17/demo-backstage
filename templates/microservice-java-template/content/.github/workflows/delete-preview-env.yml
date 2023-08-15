@@ -1,11 +1,11 @@
-name: Create Preview environment
+name: Delete Preview environment
 
 on:
   pull_request_target:
-    types: [ opened, reopened ]
+    types: [ closed ]
 
 jobs:
-  create-preview-env:
+  delete-preview-env:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,5 +14,5 @@ jobs:
           humanitec-token: ${{ secrets.HUMANITEC_TOKEN }}
           humanitec-org: ${{ secrets.HUMANITEC_ORG_ID }}
           humanitec-app: my-app
-          action: create
+          action: delete
           github-token: ${{ secrets.GITHUB_TOKEN }}
